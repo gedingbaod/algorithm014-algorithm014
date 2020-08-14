@@ -81,3 +81,58 @@
         }
         return j+1;
     }
+
+# 5.
+
+## 5.1 暴力求解(没读懂题目，理解成要创建一个新的链表)
+    public static ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
+        //定义头指针
+        ListNode point = new ListNode(0, null);
+        ListNode head = point;
+        int val_cur = 0;
+        do {
+            if (l1 != null) {
+                if (l2 != null) {
+                    if (l1.val < l2.val) {
+                        val_cur = l1.val;
+                        l1 = l1.next;
+                    } else {
+                        val_cur = l2.val;
+                        l2 = l2.next;
+                    }
+                } else {
+                    val_cur = l1.val;
+                    l1 = l1.next;
+                }
+            } else {
+                if (l2 != null) {
+                    val_cur = l2.val;
+                    l2 = l2.next;
+                } else {
+                    return null;
+                }
+            }
+            //新增节点
+            ListNode newNode = new ListNode(val_cur, null);
+            point.next = newNode;
+            point = point.next;
+        } while (l1 != null || l2 != null);
+        return head.next;
+    }
+
+## 5.2 递归方式
+    public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        } else {
+            if (l1.val < l2.val) {
+                l1.next = mergeTwoLists(l1.next, l2);
+                return l1;
+            } else {
+                l2.next = mergeTwoLists(l1, l2.next);
+                return l2;
+            }
+        }
+    }
