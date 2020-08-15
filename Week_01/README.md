@@ -82,7 +82,7 @@
         return j+1;
     }
 
-# 5.
+# 5.合并两个有序链表（亚马逊、字节跳动在半年内面试常考）
 
 ## 5.1 暴力求解(没读懂题目，理解成要创建一个新的链表)
     public static ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
@@ -135,4 +135,44 @@
                 return l2;
             }
         }
+    }
+# 6.合并两个有序数组（Facebook 在半年内面试常考）
+# 6.1 从左向右排序O( n(n+1)/2 )
+    public static void merge2(int[] nums1, int m, int[] nums2, int n) {
+        if (n == 0) {
+            return;
+        }
+        if (m == 0) {
+            for (int i = 0; i < n; i++) {
+                nums1[i] = nums2[i];
+            }
+            return;
+        }
+        int pos_1 = 0;
+        int pos_2 = 0;
+        do {
+            //如果nums1的小
+            if (nums1[pos_1] < nums2[pos_2] && pos_1 < (m + pos_2) ){
+                pos_1++;
+            } else { //如果nums2的小
+                //nums1整体右移1位
+                for (int i = m + pos_2; i > pos_1 ; i--) {
+                    nums1[i] = nums1[i -1];
+                }
+                //插入nums2的值到nums1
+                nums1[pos_1] = nums2[pos_2];
+                pos_1++;
+                pos_2++;
+            }
+        } while (pos_2 != n);
+    }
+# 6.2 从右向左排序 O(n)
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        m--;
+        n--;
+        int len = m + n + 1;
+        while (m >= 0 && n >= 0) {
+            nums1[len--] = nums1[m] > nums2[n] ? nums1[m--] : nums2[n--];
+        }
+        System.arraycopy(nums2, 0, nums1, 0, n + 1);
     }
