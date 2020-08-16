@@ -1,5 +1,5 @@
 # 0.数据结构基础
-# 0.1 冒泡排序
+## 0.1 冒泡排序
     public static void popSort(int[] nums) {
         for (int i = 0; i < nums.length; i++) {
             for (int j = i + 1; j < nums.length; j++) {
@@ -11,7 +11,7 @@
             }
         }
     }
-# 0.2 选择排序
+## 0.2 选择排序
     public static void selectSort(int[] nums) {
         for (int i = 0; i < nums.length; i++) {
             int val_min = nums[i];
@@ -26,6 +26,28 @@
             nums[i] = val_min;
         }
     }
+# 1.详见# 10.设计循环双端队列（Facebook 在 1 年内面试中考过）
+# 2.分析 Queue 和 Priority Queue 的源码
+## 2.1 java.util.Queue接口的方法：
+
+  add：    增加一个元素，成功返回true，容量不足抛出异常
+  offer：  增加一个元素，成功返回true，容量不足返回false
+  remove： 从头部删除一个元素并返回，队列为空抛出异常
+  poll：   从头部删除一个元素并返回，队列为空返回null
+  element：返回头部元素，队列为空抛出异常
+  peek：   返回头部元素，队列为空返回null
+
+  这些内容只是一个约定，最终还要根据实现的具体代码确定方法的行为表现。
+
+## 2.2 java.util.PriorityQueue类
+  继承关系：PriorityQueue <-- AbstractQueue <== Queue
+  AbstractQueue 严格实现了Queue对功能的约定add，remove，element，peek。
+  PriorityQueue 实现了全部功能，但是并没有按照接口约定，而是都抛出异常。
+  PriorityQueue最大的特点是，他包含了一个Comparator对象，这个对象可以对元素进行比较。
+  这个数据的存储使用了数组的方式，但实际上是存储了一个二叉树。
+  当插入时，通过折半的方式查找元素应该插入的位置，同时移动其他元素。
+  当删除时，直接删除首元素，同时调整二叉树。
+
 
 # 3.旋转数组（微软、亚马逊、PayPal 在半年内面试中考过）
 ## 3.1 暴力方法, O(n * k)
@@ -165,7 +187,7 @@
         }
     }
 # 6.合并两个有序数组（Facebook 在半年内面试常考）
-# 6.1 从左向右排序O( n(n+1)/2 )
+## 6.1 从左向右排序O( n(n+1)/2 )
     public static void merge2(int[] nums1, int m, int[] nums2, int n) {
         if (n == 0) {
             return;
@@ -194,7 +216,7 @@
             }
         } while (pos_2 != n);
     }
-# 6.2 从右向左排序 O(n)
+## 6.2 从右向左排序 O(n)
     public static void merge(int[] nums1, int m, int[] nums2, int n) {
         m--;
         n--;
@@ -230,7 +252,7 @@
         throw new IllegalArgumentException("No two sum solution");
     }
 # 8.移动零（Facebook、亚马逊、苹果在半年内面试中考过）
-# 8.1 左右夹逼，数组左移
+## 8.1 左右夹逼，数组左移
     public static void moveZeroes2(int[] nums) {
         int count = nums.length;
         int i = 0;
@@ -248,7 +270,7 @@
             }
         }
     }
-# 8.2 快慢指针
+## 8.2 快慢指针
     public static void moveZeroes1(int[] nums) {
         int pos_find_start = 0;
         int pos_set = 0;
@@ -272,7 +294,7 @@
             pos_find_start++;
         }
     }
-# 8.3 快慢指针优化
+## 8.3 快慢指针优化
     public static void moveZeroes(int[] nums) {
         if (nums.length < 2) {
             return;
@@ -288,6 +310,19 @@
         while (pos_set < nums.length) {
             nums[pos_set] = 0;
             pos_set++;
+        }
+    }
+## 8.4 快慢指针，兼容数组小于2的情况
+    public void moveZeroes(int[] nums) {
+        int pos_des = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                if (i > pos_des) {//兼容数组前面都不为0的情况
+                    nums[pos_des] = nums[i];
+                    nums[i] = 0;
+                }
+                pos_des++;
+            }
         }
     }
 # 9. 加一（谷歌、字节跳动、Facebook 在半年内面试中考过）
@@ -313,6 +348,18 @@
             digits[i]++;
             digits[i] = digits[i] % 10;
             if (digits[i] != 0) {
+                return digits;
+            }
+        }
+        int[] ret = new int[digits.length + 1];
+        ret[0] = 1;
+        return ret;
+    }
+## 9.3 改为用9判断，会更直观
+    public static int[] plusOne(int[] digits) {
+        for (int i = digits.length-1; i >= 0 ; i--) {
+            if (digits[i] != 9) {
+                digits[i]++;
                 return digits;
             }
         }
@@ -633,4 +680,4 @@ class MyCircularDeque {
         return count == array.length;
     }
 }
-```
+``` 
