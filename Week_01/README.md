@@ -681,3 +681,51 @@ class MyCircularDeque {
     }
 }
 ``` 
+# 11.接雨水（亚马逊、字节跳动、高盛集团、Facebook 在半年内面试常考）
+## 11.1 左右分治方法
+    public static int trap(int[] height) {
+
+        //两个连续的柱子，无法接到雨水
+        if (height.length <= 2) {
+            return 0;
+        }
+
+        //能接到雨水，至少要大于三个变量，左右两个高，中间一个低；
+        //检查是否为凹型
+        boolean comp = true;
+        for (int i = 1; i < height.length - 1; i++) {
+            if (height[i] >= height[0] || height[i] >= height[height.length - 1]) {
+                comp = false;
+                break;
+            }
+        }
+
+        //计算凹型雨量
+        if (comp) {
+            //计算水平高度
+            int hith = height[0] > height[height.length - 1] ? height[height.length - 1] : height[0];
+            int sum = 0;
+            for (int i = 1; i < height.length - 1; i++) {
+                sum += hith - height[i];
+            }
+            return sum;
+        }
+
+        //如果不是凹型，去掉左右两根柱子，再找到最高的柱子
+        int pos_dest = 1;
+        for (int i = 1; i < height.length - 1; i++) {
+            if (height[i] > height[pos_dest]) {
+                pos_dest = i;
+            }
+        }
+        //计算最高柱子左边的雨量
+        int[] left = new int[pos_dest + 1];
+        System.arraycopy(height, 0, left, 0, pos_dest + 1);
+        int sum_left = trap(left);
+        //计算最高柱子右边的雨量
+        int[] right = new int[height.length - pos_dest];
+        System.arraycopy(height, pos_dest, right, 0, height.length - pos_dest);
+        int sum_right = trap(right);
+        //求和
+        return sum_left + sum_right;
+    }
