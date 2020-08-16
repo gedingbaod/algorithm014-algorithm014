@@ -30,23 +30,23 @@
 # 2.分析 Queue 和 Priority Queue 的源码
 ## 2.1 java.util.Queue接口的方法：
 
-  add：    增加一个元素，成功返回true，容量不足抛出异常
-  offer：  增加一个元素，成功返回true，容量不足返回false
-  remove： 从头部删除一个元素并返回，队列为空抛出异常
-  poll：   从头部删除一个元素并返回，队列为空返回null
-  element：返回头部元素，队列为空抛出异常
-  peek：   返回头部元素，队列为空返回null
+  add：    增加一个元素，成功返回true，容量不足抛出异常  
+  offer：  增加一个元素，成功返回true，容量不足返回false  
+  remove： 从头部删除一个元素并返回，队列为空抛出异常  
+  poll：   从头部删除一个元素并返回，队列为空返回null  
+  element：返回头部元素，队列为空抛出异常  
+  peek：   返回头部元素，队列为空返回null  
 
   这些内容只是一个约定，最终还要根据实现的具体代码确定方法的行为表现。
 
 ## 2.2 java.util.PriorityQueue类
-  继承关系：PriorityQueue <-- AbstractQueue <== Queue
-  AbstractQueue 严格实现了Queue对功能的约定add，remove，element，peek。
-  PriorityQueue 实现了全部功能，但是并没有按照接口约定，而是都抛出异常。
-  PriorityQueue最大的特点是，他包含了一个Comparator对象，这个对象可以对元素进行比较。
-  这个数据的存储使用了数组的方式，但实际上是存储了一个二叉树。
-  当插入时，通过折半的方式查找元素应该插入的位置，同时移动其他元素。
-  当删除时，直接删除首元素，同时调整二叉树。
+  继承关系：PriorityQueue <-- AbstractQueue <== Queue  
+  AbstractQueue 严格实现了Queue对功能的约定add，remove，element，peek。  
+  PriorityQueue 实现了全部功能，但是并没有按照接口约定，而是都抛出异常。  
+  PriorityQueue最大的特点是，他包含了一个Comparator对象，这个对象可以对元素进行比较。  
+  这个数据的存储使用了数组的方式，但实际上是存储了一个二叉树。  
+  当插入时，通过折半的方式查找元素应该插入的位置，同时移动其他元素。  
+  当删除时，直接删除首元素，同时调整二叉树。  
 
 
 # 3.旋转数组（微软、亚马逊、PayPal 在半年内面试中考过）
