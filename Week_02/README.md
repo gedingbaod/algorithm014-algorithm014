@@ -183,6 +183,7 @@
     }
 # 4. 589. N叉树的前序遍历（亚马逊在半年内面试中考过）
 ## 4.1 使用递归方式 3mn
+```java
     public static List<Integer> preorder2(Node root) {
         List<Integer> ret = new ArrayList<>();
         if (root == null) {
@@ -196,22 +197,132 @@
         }
         return ret;
     }
+
+```
 ## 4.2 把数组放到外面
-    static List<Integer> ret = new ArrayList<>();
-    public static List<Integer> preorder(Node root) {
+```java
+    List<Integer> res = new ArrayList<Integer>();
+    public List<Integer> preorder(Node root) {
         inOrder(root);
-        return ret;
+        return res;
+    }
+    public void inOrder(Node root) {
+        if(root == null) {
+            return;
+        }
+        res.add(root.val);
+        int s = root.children.size();
+        for(int i = 0; i < s; i++) {
+            inOrder(root.children.get(i));
+        }
+    }
+```
+# 5. HeapSort ：自学 https://www.geeksforgeeks.org/heap-sort/
+
+# 6. 49. 字母异位词分组 （亚马逊在半年内面试中常考）
+## 6.1  通过字符串指纹确定哈希
+```java
+    public List<List<String>> groupAnagrams1(String[] strs) {
+        Map<String, List<String>> fpMap = new HashMap();
+        int[] counter = new int[26];
+        for (String str : strs) {
+            Arrays.fill(counter, 0);
+            for (char c : str.toCharArray()) {
+                counter[c - 97]++;
+            }
+            StringBuilder sb = new StringBuilder("");
+            for (int i = 0; i < 26; i++) {
+                sb.append('#');
+                sb.append(counter[i]);
+            }
+            String key = sb.toString();
+
+            if (!fpMap.containsKey(key)) {
+                fpMap.put(key,new ArrayList<String>());
+            }
+            fpMap.get(key).add(str);
+        }
+        return new ArrayList(fpMap.values());
+}
+```
+## 6.2 通多使用质数的方式，减少Key的计算
+```java
+    public List<List<String>> groupAnagrams(String[] strs) {
+
+        // 考察了哈希函数的基本知识，只要 26 个即可
+        // （小写字母ACSII 码 - 97 ）以后和质数的对应规则，这个数组的元素顺序无所谓
+        // key 是下标，value 就是数值
+        int[] primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+                31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+                73, 79, 83, 89, 97, 101};
+        // key 是字符串自定义规则下的哈希值
+        Map<Integer, List<String>> hashMap = new HashMap<>();
+        for (String s : strs) {
+            int hashValue = 1;
+
+            char[] charArray = s.toCharArray();
+            for (char c : charArray) {
+                hashValue *= primes[c - 'a'];
+            }
+
+            // 把单词添加到哈希值相同的分组
+            if (hashMap.containsKey(hashValue)) {
+                List<String> curList = hashMap.get(hashValue);
+                curList.add(s);
+            } else {
+                List<String> newList = new ArrayList<>();
+                newList.add(s);
+
+                hashMap.put(hashValue, newList);
+            }
+
+            //下面这段看起来会比较简洁，但是新加入元素是，HashMap会进行两次操作，会增加时间
+//            if (!hashMap.containsKey(hashValue)) {
+//                hashMap.put(hashValue, new ArrayList<>());
+//            }
+//            hashMap.get(hashValue).add(s);
+        }
+        return new ArrayList<>(hashMap.values());
+    }
+```
+# 6. 94. 二叉树的中序遍历（亚马逊、字节跳动、微软在半年内面试中考过）
+## 6.1 使用递归的方式
+```java
+    static List<Integer> res = new ArrayList<>();
+    public List<Integer> inorderTraversal(TreeNode root) {
+        res.clear();
+        inTrav(root);
+        return res;
     }
 
-    public static void inOrder(Node root) {
+    public void inTrav(TreeNode root) {
         if (root == null) {
             return;
         }
-        ret.add(root.val);
-        if (root.children != null) {
-            for (int i = 0; i < root.children.size(); i++) {
-                inOrder(root.children.get(i));
-            }
-        }
+        inTrav(root.left);
+        res.add(root.val);
+        inTrav(root.right);
     }
-# 5. 144. 二叉树的前序遍历（字节跳动、谷歌、腾讯在半年内面试中考过）
+```
+
+# 7. 144. 二叉树的前序遍历（字节跳动、谷歌、腾讯在半年内面试中考过）
+## 7.1 递归实现  List放在函数外面会提高性能
+```java
+    static List<Integer> res = new ArrayList<>();
+    public static List<Integer> inorderTraversal(TreeNode root) {
+        res.clear();
+        inTrav(root);
+        return res;
+    }
+
+    public static void inTrav(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inTrav(root.left);
+        res.add(root.val);
+        inTrav(root.right);
+    }
+```
+# 8. 429. N叉树的层序遍历（亚马逊在半年内面试中考过）
+## 8.1 
