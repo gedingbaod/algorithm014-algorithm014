@@ -429,3 +429,117 @@
         }
         return result;
     }
+# 9. 丑数（字节跳动在半年内面试中考过）
+## 9.1 暴力
+```java
+    public int nthUglyNumber2(int n) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 1);
+        map.put(2, 2);
+        map.put(3, 3);
+        map.put(5, 5);
+
+        int counter = 0;
+        int num = 0;
+        while (counter != n) {
+            num++;
+            for (Integer exist : map.keySet()) {
+                if (map.containsKey(num / exist) && num % exist == 0) {
+                    map.put(num, counter);
+                    counter++;
+                    break;
+                }
+            }
+        }
+        return num;
+    }
+```
+## 9.2 只考虑235被整除的情况
+```java
+    public int nthUglyNumber000(int n) {
+        if (n <= 5) {
+            return map.get(n);
+        }
+        int counter = 0;
+        int num = 0;
+        for (Integer start : map.keySet()) {
+            if (start > num) {
+                num = start;
+                counter = map.get(start);
+            }
+        }
+        while (counter != n) {
+            num++;
+            if (map.containsKey(num / 2) && num % 2 == 0) {
+                counter++;
+                map.put(num, counter);
+                continue;
+            }
+            if (map.containsKey(num / 3) && num % 3 == 0) {
+                counter++;
+                map.put(num, counter);
+                continue;
+            }
+            if (map.containsKey(num / 5) && num % 5 == 0) {
+                counter++;
+                map.put(num, counter);
+                continue;
+            }
+        }
+        return num;
+    }
+    static Map<Integer, Integer> map = new HashMap<>();
+    static {
+        map.put(1, 1);
+        map.put(2, 2);
+        map.put(3, 3);
+        map.put(4, 4);
+        map.put(5, 5);
+    }
+```
+## 9.3 动态规划
+```java
+    public int nthUglyNumber(int n) {
+        int a = 0, b = 0, c = 0;
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for (int i = 1; i < n; i++) {
+            int n2 = dp[a] * 2, n3 = dp[b] * 3, n5 = dp[c] * 5;
+            dp[i] = Math.min(n2, Math.min(n3, n5));
+            if(dp[i] == n2) a++;
+            if(dp[i] == n3) b++;
+            if(dp[i] == n5) c++;
+        }
+        return dp[n - 1];
+    }
+```
+# 10. 347. 前 K 个高频元素（亚马逊在半年内面试中常考）
+## 10.1 使用小顶堆排序
+```java
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] ret = new int[k];
+        int size = nums.length;
+        for (int i = 0; i < size; i++) {
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+        }
+        List<Integer> list = new ArrayList<>();
+        PriorityQueue<Integer> queue = new PriorityQueue<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return map.get(o1) - map.get(o2);
+            }
+        });
+        for (Integer key : map.keySet()) {
+            if (queue.size() < k) {
+                queue.add(key);
+            } else if (map.get(key) > map.get(queue.peek())) {
+                queue.remove();
+                queue.add(key);
+            }
+        }
+        for (int i = 0; i < k; i++) {
+            ret[i] = queue.remove();
+        }
+        return ret;
+```
