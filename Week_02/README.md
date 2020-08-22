@@ -325,4 +325,107 @@
     }
 ```
 # 8. 429. N叉树的层序遍历（亚马逊在半年内面试中考过）
-## 8.1 
+## 8.1 逐层遍历 2mn
+    List<List<Integer>> ret429 = new ArrayList<>();
+    public List<List<Integer>> levelOrder2(Node root) {
+        if (root == null) {
+            return ret429;
+        }
+        //处理第一层
+        List<Integer> chList = new ArrayList<>();
+        chList.add(root.val);
+        ret429.add(chList);
+
+        //循环遍历下一层
+        List<Node> nodeList = root.children;
+        if (nodeList == null || nodeList.size() == 0) {
+            return ret429;
+        }
+        while (nodeList.size() != 0) {
+            nodeList = layerTrav(nodeList);
+        }
+        return ret429;
+    }
+
+    public List<Node> layerTrav(List<Node> list) {
+        List<Integer> chList = new ArrayList<>();
+        List<Node> nodeList = new ArrayList<>();
+        for (Node node : list) {
+            chList.add(node.val);
+            if (node.children != null && node.children.size() != 0) {
+                nodeList.addAll(node.children);
+            }
+        }
+        ret429.add(chList);
+        return nodeList;
+    }
+## 8.2 放到一个函数里，会慢 3mn
+    public List<List<Integer>> levelOrder1(Node root) {
+        List<List<Integer>> ret429 = new ArrayList<>();
+        if (root == null) {
+            return ret429;
+        }
+        //处理第一层
+        List<Integer> rootList = new ArrayList<>();
+        rootList.add(root.val);
+        ret429.add(rootList);
+
+        //循环遍历下一层
+        List<Node> nodeList = root.children;
+        if (nodeList == null || nodeList.size() == 0) {
+            return ret429;
+        }
+        while (nodeList.size() != 0) {
+            List<Integer> chList = new ArrayList<>();
+            List<Node> tempList = new ArrayList<>();
+            for (Node node : nodeList) {
+                chList.add(node.val);
+                if (node.children != null && node.children.size() != 0) {
+                    tempList.addAll(node.children);
+                }
+            }
+            ret429.add(chList);
+            nodeList.clear();
+            nodeList = tempList;
+        }
+        return ret429;
+    }
+## 8.3 简化的广度优先搜索
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+        List<Node> layer = Arrays.asList(root);
+        while (!layer.isEmpty()) {
+            List<Integer> values = new ArrayList<>();
+            List<Node> tempList = new ArrayList<>();
+            for (Node node : layer) {
+                values.add(node.val);
+                if (node.children != null && !node.children.isEmpty()) {
+                    tempList.addAll(node.children);
+                }
+            }
+            result.add(values);
+            layer = tempList;
+        }
+        return result;
+    }
+## 8.4 通过队列的方式遍历整个树 3mn
+    public List<List<Integer>> levelOrder0(Node root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+        Queue<Node> layer = new LinkedList<>();
+        layer.add(root);
+        while (!layer.isEmpty()) {
+            List<Integer> values = new ArrayList<>();
+            int size = layer.size();
+            for (int i = 0; i < size; i++) {
+                Node node = layer.poll();
+                values.add(node.val);
+                if (node.children != null && !node.children.isEmpty()) {
+                    layer.addAll(node.children);
+                }
+            }
+            result.add(values);
+        }
+        return result;
+    }
