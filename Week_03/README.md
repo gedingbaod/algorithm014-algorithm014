@@ -178,3 +178,75 @@ List<List<Integer>> ret = new ArrayList<>();
     }
 ```
 # 5. 全排列 II （亚马逊、字节跳动、Facebook 在半年内面试中考过）
+## 5.1 使用哈希去重
+```java
+    List<List<Integer>> res = new ArrayList<>();
+    Map<String,Integer> map = new HashMap();
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int[] visited = new int[nums.length];
+        backTrace(nums, new LinkedList<Integer>(), visited);
+        return res;
+    }
+
+    public void backTrace(int[] nums, LinkedList<Integer> track, int[] visited) {
+        int size = nums.length;
+        if (size == track.size()) {
+            res.add(new ArrayList<>(track));
+            return;
+        }
+        for (int i = 0; i < size; i++) {
+            if (visited[i] == 1) {
+                continue;
+            }
+
+            //去重
+            StringBuilder sb = new StringBuilder();
+            for (Integer in : track) {
+                sb.append(in).append("#");
+            }
+            sb.append(nums[i]);
+            String str = sb.toString();
+            if (map.containsKey(str)) {
+                continue;
+            }
+            map.put(str,null);
+
+            //回溯
+            visited[i] = 1;
+            track.add(nums[i]);
+            backTrace(nums, track, visited);
+            visited[i] = 0;
+            track.removeLast();
+        }
+    }
+```
+## 5.2 剪枝的方式
+```java
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        if(nums.length < 1) return result;
+        Arrays.sort(nums);
+        trackBack(nums, new boolean[nums.length], new LinkedList<Integer>());
+        return result;
+    }
+
+    public void trackBack(int[] nums, boolean[] visited, LinkedList<Integer> track) {
+        if (track.size() == nums.length) {
+            result.add(new LinkedList<>(track));
+            return;
+        }
+        int size = nums.length;
+        for (int i = 0; i < size; i++) {
+            if(visited[i]) continue;
+            //如果当前节点与他的前一个节点一样，并且他的前一个节点已经被遍历过了，那我们也就不需要了。
+//            if(i > 0 && nums[i] == nums[i-1] && visited[i-1]) break;
+            //如果当前节点与他的前一个节点一样，并且他的前一个节点未被遍历过，那我们就跳过。
+            if(i > 0 && nums[i] == nums[i-1] && !visited[i-1]) continue;
+
+            visited[i] = true;
+            track.add(nums[i]);
+            trackBack(nums, visited, track);
+            visited[i] = false;
+            track.removeLast();
+        }
+    }
+```
