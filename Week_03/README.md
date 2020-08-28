@@ -96,5 +96,31 @@ public TreeNode lowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q) {
     }
 ```
 # 3. 组合（微软、亚马逊、谷歌在半年内面试中考过）
+```java
+List<List<Integer>> ret = new ArrayList<>();
+    public List<List<Integer>> combine(int n, int k) {
+        if (n <= 0 || k <= 0 || n < k) {
+            return ret;
+        }
+        findCombination(n, k, 1, new Stack<Integer>());
+        return ret;
+    }
+
+    // p 可以声明成一个栈
+    // i 的极限值满足： n - i + 1 = (k - pre.size())。
+    // 【关键】n - i + 1 是闭区间 [i,n] 的长度。
+    // k - pre.size() 是剩下还要寻找的数的个数。
+    public void findCombination(int n, int k, int start, Stack<Integer> pre) {
+        if (pre.size() == k) {
+            ret.add(new ArrayList<>(pre));
+            return;
+        }
+        for (int i = start; i < n - (k - pre.size()) + 1; i++) {
+            pre.push(i);
+            findCombination(n, k, i + 1, pre);
+            pre.pop();
+        }
+    }
+```
 # 4. 全排列（字节跳动在半年内面试常考）
 # 5. 全排列 II （亚马逊、字节跳动、Facebook 在半年内面试中考过）
