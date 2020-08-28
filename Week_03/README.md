@@ -123,4 +123,58 @@ List<List<Integer>> ret = new ArrayList<>();
     }
 ```
 # 4. 全排列（字节跳动在半年内面试常考）
+## 4.1 回溯法
+```java
+    public List<List<Integer>> permute1(int[] nums) {
+        if (nums.length < 1) {
+            return res;
+        }
+        findPermute(nums, new LinkedList<Integer>());
+        return res;
+    }
+
+    public void findPermute(int[] nums, LinkedList<Integer> track) {
+        if (nums.length == track.size()) {
+            res.add(new ArrayList<>(track));
+            return;
+        }
+        int size = nums.length;
+        for (int i = 0; i < size; i++) {
+            if (track.contains(nums[i])) {
+                continue;
+            }
+            track.add(nums[i]);
+            findPermute(nums, track);
+            track.removeLast();
+        }
+    }
+```
+## 4.2 加强判断表达式
+```java
+    List<List<Integer>> res = new ArrayList<>();
+
+    public List<List<Integer>> permute(int[] nums) {
+        int[] visited = new int[nums.length];
+        backTrace(nums, new LinkedList<Integer>(), visited);
+        return res;
+    }
+
+    public void backTrace(int[] nums, LinkedList<Integer> track, int[] visited) {
+        int size = nums.length;
+        if (size == track.size()) {
+            res.add(new ArrayList<>(track));
+            return;
+        }
+        for (int i = 0; i < size; i++) {
+            if (visited[i] == 1) {
+                continue;
+            }
+            visited[i] = 1;
+            track.add(nums[i]);
+            backTrace(nums, track, visited);
+            visited[i] = 0;
+            track.removeLast();
+        }
+    }
+```
 # 5. 全排列 II （亚马逊、字节跳动、Facebook 在半年内面试中考过）
