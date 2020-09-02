@@ -88,6 +88,30 @@ const dfs = node => {
 ```
 
 ## 0.2 DSF 非递归写法
+
+```java
+//DFS的迭代实现版本（Stack）
+public void DFSWithStack(TreeNode root) {
+     if (root == null)
+         return;
+     Stack<TreeNode> stack = new Stack<>();
+     stack.push(root);
+
+     while (!stack.isEmpty()) {
+         TreeNode treeNode = stack.pop();
+
+         //在这里处理遍历到的TreeNode
+
+         if (treeNode.right != null)
+             stack.push(treeNode.right);
+
+         if (treeNode.left != null)
+             stack.push(treeNode.left);
+     }
+}
+```
+
+
 ```Python
 #Python
 def DFS(self, tree): 
@@ -192,6 +216,30 @@ public List<List<Integer>> levelOrder(TreeNode root) {
 }
 ```
 
+```java
+//使用Queue实现BFS
+public void BFSWithQueue(Node root) {
+    Queue<Node> queue = new LinkedList<>();
+    if (root != null)
+        queue.add(root);
+    Set<Node> visited = new HashSet<>();
+    
+    while (!queue.isEmpty()) {
+        Node node = queue.poll();
+        visited.add(node);
+ 
+        //在这里处理遍历到的Node节点
+ 
+        if (node.children != null) {
+            for (Node child : node.children) {
+                if (child != null && !visited.contains(child){
+                    queue.add(child);
+                }
+            }
+        }
+    }
+}
+```
 ```C++
 // C/C++
 void bfs(Node* root) {
@@ -233,3 +281,81 @@ const bfs = (root) => {
   return result
 };
 ```
+
+# 1. 模拟行走机ac亚马逊在半年内面试中考过）
+# 2. 模拟行走机ab佳时机 II （亚马逊、字节跳动、微软在半年内面试中考过）
+# 3. 模拟行走机aa逊在半年内面试中考过）
+# 4. 模拟行走机器人
+# 5. 使用二分查找，寻找一个半有序数组 [4, 5, 6, 7, 0, 1, 2] 中间无序的地方
+# 6. 说明：同学们可以将自己的思路、代码写在第 4 周的学习总结中
+# 7. 单词接龙（亚马逊在半年内面试常考）
+# 8. 岛屿数量（近半年内，亚马逊在面试中考查此题达到 350 次）
+## 8.1 深度优先
+```java
+    public int numIslands(char[][] grid) {
+        if(grid == null || grid.length == 0) return 0;
+
+        int gr = grid.length;
+        int gc = grid[0].length;
+        int counter = 0;
+
+        for (int i = 0; i < gr; i++) {
+            for (int j = 0; j < gc; j++) {
+                if (grid[i][j] == '1') {
+                    DFSMarking(grid, i, j);
+                    counter++;
+                }
+            }
+        }
+        return counter;
+    }
+    public void DFSMarking(char[][] grid, int i, int j) {
+        int gr = grid.length;
+        int gc = grid[0].length;
+        if(i < 0 || j < 0 || i >= gr || j >= gc || grid[i][j] == '0') return;
+
+        grid[i][j] = '0';
+        DFSMarking(grid, i - 1, j);
+        DFSMarking(grid, i + 1, j);
+        DFSMarking(grid, i, j - 1);
+        DFSMarking(grid, i, j + 1);
+    }
+```
+
+# 9. 扫雷游戏（亚马逊、Facebook 在半年内面试中考过）
+# 10. 跳跃游戏 （亚马逊、华为、Facebook 在半年内面试中考过）
+## 10.1 正着跳
+```java
+public boolean canJump2(int[] nums) {
+        int n = nums.length;
+        int rightmost = 0;
+        for (int i = 0; i < n; i++) {
+            if (i <= rightmost) {
+                rightmost = Math.max(rightmost, i + nums[i]);
+                if (rightmost >= n - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+```
+## 10.2 反着跳
+```java
+    public boolean canJump(int[] nums) {
+        if(nums == null) return false;
+        int endReachable = nums.length - 1;
+        //因为最后一个不用判断，可以直接从倒数第二个开始
+        for (int i = endReachable - 1; i >= 0; i--) {
+            if (nums[i] + i >= endReachable) {
+                endReachable = i;
+            }
+        }
+        return endReachable == 0;
+    }
+```
+# 11. 搜索旋转排序数组（Facebook、字节跳动、亚马逊在半年内面试常考）
+# 12. 搜索二维矩阵（亚马逊、微软、Facebook 在半年内面试中考过）
+# 13. 寻找旋转排序数组中的最小值（亚马逊、微软、字节跳动在半年内面试中考过）
+# 14. 单词接龙 II （微软、亚马逊、Facebook 在半年内面试中考过）
+# 15. 跳跃游戏 II （亚马逊、华为、字节跳动在半年内面试中考过）
