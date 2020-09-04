@@ -283,6 +283,61 @@ const bfs = (root) => {
 ```
 
 # 1. 模拟行走机ac亚马逊在半年内面试中考过）
+## 1.1 暴力求解
+```java
+    public boolean lemonadeChange02(int[] bills) {
+        if (bills == null || bills.length == 0) {
+            return false;
+        }
+        int size = bills.length;
+        int[] inside = new int[3];//20元可以省略，但是真实记账一定是要记得
+        for (int i = 0; i < size; i++) {
+            int recieve = bills[i];
+            if (recieve == 5) {
+                inside[0]++;
+            } else if (recieve == 10 && inside[0] > 0) {
+                inside[1]++;
+                inside[0]--;
+            } else if (recieve == 20 && inside[0] > 0 && inside[1] > 0)  {
+                inside[2]++;
+                inside[1]--;
+                inside[0]--;
+            } else if (recieve == 20 && inside[0] >= 3) {
+                inside[2]++;
+                inside[0] -= 3;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+```
+## 1.2 贪心算法,1改变for循环，2改变存储方式，3改变判断方式，4先减为负数，再判断结束条件
+```java
+    public boolean lemonadeChange01(int[] bills) {
+        int five = 0, ten = 0;
+        for (int bill : bills) {
+            switch (bill) {
+                case 5: five++; break;
+                case 10: five--; ten++; break;
+                case 20: {
+                    if (ten > 0) {
+                        ten--;
+                        five--;
+                    } else {
+                        five -= 3;
+                    }
+                    break;
+                }
+                default: break;
+            }
+            if (five < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+```
 # 2. 模拟行走机ab佳时机 II （亚马逊、字节跳动、微软在半年内面试中考过）
 # 3. 模拟行走机aa逊在半年内面试中考过）
 # 4. 模拟行走机器人
