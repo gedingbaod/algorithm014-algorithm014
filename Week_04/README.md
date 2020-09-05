@@ -338,14 +338,93 @@ const bfs = (root) => {
         return true;
     }
 ```
-# 2. 模拟行走机ab佳时机 II （亚马逊、字节跳动、微软在半年内面试中考过）
-# 3. 模拟行走机aa逊在半年内面试中考过）
+# 2. 买卖股票的最佳时机 II （亚马逊、字节跳动、微软在半年内面试中考过）
+## 2.1 递归方法，算法超时
+```java
+    public int maxProfit02(int[] prices) {
+        return calculate(prices, 0);
+    }
+
+    //双指针方法，利润=卖出指针-买入指针
+    public int calculate(int[] prices, int s) {
+        if(s >= prices.length) return 0;
+        int maxSum = 0;//买入时间不同，取最大值
+        for (int bit = s; bit < prices.length; bit++) {
+            int maxProfit = 0;//卖出时机不同，取最大值
+            for (int down = bit + 1; down < prices.length; down++) {
+                if (prices[down] > prices[bit]) {
+                    int profit = calculate(prices, down + 1) + prices[down] - prices[bit];
+                    if(profit > maxProfit) maxProfit = profit;
+                }
+            }
+            if(maxProfit > maxSum) maxSum = maxProfit;
+        }
+        return maxSum;
+    }
+```
+## 2.2 波峰波谷，每个波谷到波峰的叠加，就是最大利润
+```java
+    public int maxProfit01(int[] prices) {
+        int valley = prices[0];
+        int peak = prices[0];
+        int maxProfit = 0;
+        int step = 0;
+        int maxStep = prices.length - 1;
+        while (step < maxStep) {
+            while (step < maxStep && prices[step] >= prices[step + 1]) {
+                step++;
+            }
+            valley = prices[step];
+            while (step < maxStep && prices[step] <= prices[step + 1]) {
+                step++;
+            }
+            peak = prices[step];
+            maxProfit += peak - valley;
+        }
+        return maxProfit;
+    }
+```
+## 2.3 贪心算法
+```java
+    public int maxProfit00(int[] prices) {
+        int maxProfit = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {//只要当前一步有利润，就累加
+                maxProfit += prices[i] - prices[i - 1];
+            }
+        }
+        return maxProfit;
+    }
+```
+## 2.4 动态规划
+```java
+    public int maxProfit(int[] prices) {
+        int len = prices.length;
+        if(len < 2) return 0;
+        // cash：持有现金
+        // hold：持有股票
+        // 状态数组
+        // 状态转移：cash → hold → cash → hold → cash → hold → cash
+        int[] cash = new int[len];
+        int[] hold = new int[len];
+
+        cash[0] = 0;
+        hold[0] = -prices[0];
+
+        for (int i = 1; i < len; i++) {
+            cash[i] = Math.max(cash[i - 1], hold[i - 1] + prices[i]);
+            hold[i] = Math.max(hold[i - 1], cash[i - 1] - prices[i]);
+        }
+        return cash[len - 1];
+    }
+```
+# 3. 分发饼干（亚马逊在半年内面试中考过）
 # 4. 模拟行走机器人
 # 5. 使用二分查找，寻找一个半有序数组 [4, 5, 6, 7, 0, 1, 2] 中间无序的地方
-# 6. 说明：同学们可以将自己的思路、代码写在第 4 周的学习总结中
-# 7. 单词接龙（亚马逊在半年内面试常考）
-# 8. 岛屿数量（近半年内，亚马逊在面试中考查此题达到 350 次）
-## 8.1 深度优先
+     说明：同学们可以将自己的思路、代码写在第 4 周的学习总结中
+# 6. 单词接龙（亚马逊在半年内面试常考）
+# 7. 岛屿数量（近半年内，亚马逊在面试中考查此题达到 350 次）
+## 7.1 深度优先
 ```java
     public int numIslands(char[][] grid) {
         if(grid == null || grid.length == 0) return 0;
@@ -377,9 +456,9 @@ const bfs = (root) => {
     }
 ```
 
-# 9. 扫雷游戏（亚马逊、Facebook 在半年内面试中考过）
-# 10. 跳跃游戏 （亚马逊、华为、Facebook 在半年内面试中考过）
-## 10.1 正着跳
+# 8. 扫雷游戏（亚马逊、Facebook 在半年内面试中考过）
+# 9. 跳跃游戏 （亚马逊、华为、Facebook 在半年内面试中考过）
+## 9.1 正着跳
 ```java
 public boolean canJump2(int[] nums) {
         int n = nums.length;
@@ -395,7 +474,7 @@ public boolean canJump2(int[] nums) {
         return false;
     }
 ```
-## 10.2 反着跳
+## 9.2 反着跳
 ```java
     public boolean canJump(int[] nums) {
         if(nums == null) return false;
@@ -409,8 +488,8 @@ public boolean canJump2(int[] nums) {
         return endReachable == 0;
     }
 ```
-# 11. 搜索旋转排序数组（Facebook、字节跳动、亚马逊在半年内面试常考）
-# 12. 搜索二维矩阵（亚马逊、微软、Facebook 在半年内面试中考过）
-# 13. 寻找旋转排序数组中的最小值（亚马逊、微软、字节跳动在半年内面试中考过）
-# 14. 单词接龙 II （微软、亚马逊、Facebook 在半年内面试中考过）
-# 15. 跳跃游戏 II （亚马逊、华为、字节跳动在半年内面试中考过）
+# 10. 搜索旋转排序数组（Facebook、字节跳动、亚马逊在半年内面试常考）
+# 11. 搜索二维矩阵（亚马逊、微软、Facebook 在半年内面试中考过）
+# 12. 寻找旋转排序数组中的最小值（亚马逊、微软、字节跳动在半年内面试中考过）
+# 13. 单词接龙 II （微软、亚马逊、Facebook 在半年内面试中考过）
+# 14. 跳跃游戏 II （亚马逊、华为、字节跳动在半年内面试中考过）
