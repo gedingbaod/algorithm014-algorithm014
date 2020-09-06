@@ -436,6 +436,78 @@ const bfs = (root) => {
     }
 ```
 # 4. 模拟行走机器人
+## 4.1 将障碍物的x和y坐标组合成一个字符串用set保存障碍物，查找的时候只要判断当前坐标组成的串是否在set里。
+```java
+public int robotSim02(int[] commands, int[][] obstacles) {
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+        int x = 0, y=0;
+        int dir_index=0;
+        int ans = 0;
+        Set<String> blockSet = new HashSet<String>();
+        for (int i=0;i<obstacles.length;i++) {
+            blockSet.add(obstacles[i][0]+","+obstacles[i][1]);
+        }
+
+        for (int i=0;i<commands.length;i++) {
+            if (commands[i]==-1) {
+                dir_index=(dir_index+1)%4;
+            }else if (commands[i]==-2) {
+                dir_index=(dir_index+3)%4;
+            }
+            else if (commands[i]>0) {
+                for (int j=1;j<=commands[i];j++) {
+                    int next_x = x+ dir[dir_index][0];
+                    int next_y = y+ dir[dir_index][1];
+                    if (blockSet.contains(next_x+","+next_y)) {
+                        break;
+                    }else {
+                        x = next_x;
+                        y = next_y;
+                        ans = Math.max(ans, x*x+y*y);
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+```
+## 4.2 每移动一步前，判断该位置是否为障碍物，如果存在障碍物，结束当前路径的移动
+```java
+    public int robotSim(int[] commands, int[][] obstacles) {
+        //direction表当前朝向，0123 表 北东南西
+        int ans = 0,direction = 0,x = 0,y = 0;
+        //每个朝向上的数据变化，比如朝北时取Direction[0]  ->   {0,1}
+        //那么x轴的变化为x+0，y轴变化为y+1;
+        int[][] Direction = {{0,1},{1,0},{0,-1},{-1,0}};
+
+        HashSet<String> set = new HashSet<>();
+        //将所有障碍物坐标组合成字符串存入set中方便查询
+        for (int[] arr : obstacles) set.add(arr[0]+"，"+arr[1]);
+
+        for (int com : commands){
+            //定义下一步的坐标
+            int next_x = 0,next_y = 0;
+            //当命令为前进，开始移动
+            if (com >= 0 ){
+                for(int i = 0; i < com; i++){
+                    //取得下一步的坐标
+                    next_x = x + Direction[direction][0];
+                    next_y = y + Direction[direction][1];
+                    //若下一步有障碍物，结束当前命令，跳至下一命令
+                    if(set.contains(next_x+"，"+next_y)) break;
+                    //否则更新坐标与最远距离
+                    x = next_x;
+                    y = next_y;
+                    ans = Math.max(ans, x*x + y*y);
+                }
+            }else{
+                //改变朝向
+                direction = com == -1 ? (direction + 1) % 4 : (direction + 3) % 4;
+            }
+        }
+        return ans;
+    }
+```
 # 5. 使用二分查找，寻找一个半有序数组 [4, 5, 6, 7, 0, 1, 2] 中间无序的地方
      说明：同学们可以将自己的思路、代码写在第 4 周的学习总结中
 # 6. 单词接龙（亚马逊在半年内面试常考）
